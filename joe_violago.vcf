@@ -1,0 +1,11 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Violago;Joe;;;
+FN:Joe Violago
+TITLE:Senior DevOps Engineer
+ROLE:Radio Hacker Acolyte
+EMAIL;TYPE=INTERNET,HOME:joe.violago@gmail.com
+URL:https://joev.me
+X-SOCIALPROFILE;TYPE=github:https://github.com/joevdotme
+NOTE:Met at BSides Charm April 2026
+END:VCARD
