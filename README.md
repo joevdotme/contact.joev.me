@@ -17,32 +17,33 @@ NFC-friendly vCard hosting on S3. Tap a tag → URL → `Content-Type: text/vcar
 ## Fork & customize
 
 1. Fork this repo
-2. Rename or replace `joe_violago.vcf` with your own VCF file
-3. Configure GitHub secrets and variables (see below)
-4. Run the **Provision S3 Bucket + DNS** workflow once from the Actions tab
-5. Program your NFC tag with: `http://<SUBDOMAIN>.<DOMAIN>/<your-file>.vcf`
+2. Edit `config.env` with your values (see below)
+3. Rename or replace `joe_violago.vcf` with your own VCF file
+4. Add your AWS credentials as GitHub secrets (see below)
+5. Run the **Provision S3 Bucket + DNS** workflow once from the Actions tab
+6. Program your NFC tag with: `http://<SUBDOMAIN>.<DOMAIN>/<your-file>.vcf`
 
 After that, any push to `main` that touches a `.vcf` file triggers an automatic re-deploy.
 
+## config.env
+
+All non-secret configuration lives in [`config.env`](config.env) at the repo root. Edit this file to customize for your fork — no GitHub UI settings required.
+
+| Variable | Description |
+|----------|-------------|
+| `AWS_REGION` | AWS region for the S3 bucket |
+| `DOMAIN` | Root domain (must have a hosted zone in Route 53) |
+| `SUBDOMAIN` | Subdomain prefix — bucket will be `<SUBDOMAIN>.<DOMAIN>` |
+| `VCF_FILE` | Filename of the VCF in the repo |
+
 ## GitHub secrets
 
-Set these under **Settings → Secrets and variables → Actions → Secrets**:
+The only things that must be set in **Settings → Secrets and variables → Actions → Secrets** are the AWS credentials:
 
 | Secret | Description |
 |--------|-------------|
 | `AWS_ACCESS_KEY_ID` | IAM access key ID |
 | `AWS_SECRET_ACCESS_KEY` | IAM secret access key |
-
-## GitHub variables
-
-Set these under **Settings → Secrets and variables → Actions → Variables**. All are optional — defaults match this repo's original setup.
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `AWS_REGION` | `us-east-1` | AWS region for the S3 bucket |
-| `DOMAIN` | `joev.me` | Root domain (must have a hosted zone in Route 53) |
-| `SUBDOMAIN` | `contact` | Subdomain prefix — bucket will be `<SUBDOMAIN>.<DOMAIN>` |
-| `VCF_FILE` | `joe_violago.vcf` | Filename of the VCF in the repo |
 
 ## IAM permissions
 

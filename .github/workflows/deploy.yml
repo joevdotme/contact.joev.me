@@ -7,36 +7,33 @@ on:
       - '**.vcf'
   workflow_dispatch:
 
-env:
-  REGION:    ${{ vars.AWS_REGION || 'us-east-1' }}
-  DOMAIN:    ${{ vars.DOMAIN    || 'joev.me' }}
-  SUBDOMAIN: ${{ vars.SUBDOMAIN || 'contact' }}
-  VCF:       ${{ vars.VCF_FILE  || 'joe_violago.vcf' }}
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      - name: Load config
+        run: cat config.env >> $GITHUB_ENV
+
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.REGION }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Provision (idempotent)
         run: |
           make provision \
             DOMAIN=${{ env.DOMAIN }} \
             SUBDOMAIN=${{ env.SUBDOMAIN }} \
-            REGION=${{ env.REGION }} \
-            VCF=${{ env.VCF }}
+            REGION=${{ env.AWS_REGION }} \
+            VCF=${{ env.VCF_FILE }}
 
       - name: Upload VCF
         run: |
           make deploy \
             DOMAIN=${{ env.DOMAIN }} \
             SUBDOMAIN=${{ env.SUBDOMAIN }} \
-            REGION=${{ env.REGION }} \
-            VCF=${{ env.VCF }}
+            REGION=${{ env.AWS_REGION }} \
+            VCF=${{ env.VCF_FILE }}
