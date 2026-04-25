@@ -1,7 +1,9 @@
-BUCKET      := contact.joev.me
+DOMAIN      ?= joev.me
+SUBDOMAIN   ?= contact
+BUCKET      := $(SUBDOMAIN).$(DOMAIN)
 REGION      ?= us-east-1
-VCF         := joe_violago.vcf
-HOSTED_ZONE ?= joev.me
+VCF         ?= joe_violago.vcf
+HOSTED_ZONE ?= $(DOMAIN)
 
 ifeq ($(REGION),us-east-1)
 CREATE_BUCKET_ARGS :=

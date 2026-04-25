@@ -1,12 +1,17 @@
-name: Provision S3 Bucket
+name: Provision S3 Bucket + DNS
 
 on:
   workflow_dispatch:
     inputs:
       region:
-        description: AWS region
+        description: AWS region (overrides vars.AWS_REGION)
         required: false
-        default: us-east-1
+
+env:
+  REGION:    ${{ inputs.region || vars.AWS_REGION || 'us-east-1' }}
+  DOMAIN:    ${{ vars.DOMAIN    || 'joev.me' }}
+  SUBDOMAIN: ${{ vars.SUBDOMAIN || 'contact' }}
+  VCF:       ${{ vars.VCF_FILE  || 'joe_violago.vcf' }}
 
 jobs:
   provision:
@@ -18,7 +23,12 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ inputs.region }}
+          aws-region: ${{ env.REGION }}
 
-      - name: Provision bucket
-        run: make provision REGION=${{ inputs.region }}
+      - name: Provision bucket and DNS
+        run: |
+          make provision \
+            DOMAIN=${{ env.DOMAIN }} \
+            SUBDOMAIN=${{ env.SUBDOMAIN }} \
+            REGION=${{ env.REGION }} \
+            VCF=${{ env.VCF }}
