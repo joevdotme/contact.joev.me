@@ -19,5 +19,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Provision (idempotent)
+        run: make provision
+
       - name: Upload VCF
         run: make deploy

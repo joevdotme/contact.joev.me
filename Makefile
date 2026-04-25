@@ -16,10 +16,12 @@ S3_ENDPOINT := $(BUCKET).s3-website-$(REGION).amazonaws.com
 provision: s3 dns
 
 s3:
-	aws s3api create-bucket \
-		--bucket $(BUCKET) \
-		--region $(REGION) \
-		$(CREATE_BUCKET_ARGS)
+	@if ! aws s3api head-bucket --bucket $(BUCKET) 2>/dev/null; then \
+		aws s3api create-bucket \
+			--bucket $(BUCKET) \
+			--region $(REGION) \
+			$(CREATE_BUCKET_ARGS); \
+	fi
 	aws s3api put-public-access-block \
 		--bucket $(BUCKET) \
 		--public-access-block-configuration \
